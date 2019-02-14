@@ -34,7 +34,12 @@ class ChecklistViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         checkList[indexPath.row].toggleChecked()
-        tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        checkList.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
     }
     
     func configureCheckmark(for cell: UITableViewCell, withItem item: CheckListItem){
@@ -47,6 +52,11 @@ class ChecklistViewController: UITableViewController {
     
     func configureText(for cell: UITableViewCell, withItem item: CheckListItem){
         cell.textLabel?.text = item.text
+    }
+    
+    func addDummyTodo(){
+        checkList.append(CheckListItem(text: "Add element"))
+        self.tableView.insertRows(at: [IndexPath(row: checkList.count - 1, section: 0)], with: .automatic)
     }
 }
 

@@ -15,6 +15,7 @@
 		083FA56922155FA100761656 /* ChecklistsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083FA56822155FA100761656 /* ChecklistsTests.swift */; };
 		083FA57422155FA100761656 /* ChecklistsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083FA57322155FA100761656 /* ChecklistsUITests.swift */; };
 		083FA585221574C700761656 /* CheckListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083FA584221574C700761656 /* CheckListItem.swift */; };
+		083FA5892215A65E00761656 /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083FA5882215A65E00761656 /* AddItemViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		083FA57322155FA100761656 /* ChecklistsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistsUITests.swift; sourceTree = "<group>"; };
 		083FA57522155FA100761656 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		083FA584221574C700761656 /* CheckListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListItem.swift; sourceTree = "<group>"; };
+		083FA5882215A65E00761656 /* AddItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddItemViewController.swift; path = ../AddItemViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 		083FA583221573E100761656 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				083FA5882215A65E00761656 /* AddItemViewController.swift */,
 				083FA55522155F9F00761656 /* ChecklistViewController.swift */,
 			);
 			name = Controllers;
@@ -284,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				083FA585221574C700761656 /* CheckListItem.swift in Sources */,
+				083FA5892215A65E00761656 /* AddItemViewController.swift in Sources */,
 				083FA55622155F9F00761656 /* ChecklistViewController.swift in Sources */,
 				083FA55422155F9F00761656 /* AppDelegate.swift in Sources */,
 			);
