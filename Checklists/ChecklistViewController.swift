@@ -20,6 +20,16 @@ class ChecklistViewController: UITableViewController {
         checkList.append(CheckListItem(text: "Test 4"))
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "pickColor" {
+                
+            }
+        }
+        
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return checkList.count
     }
@@ -60,3 +70,14 @@ class ChecklistViewController: UITableViewController {
     }
 }
 
+extension ChecklistViewController: AddItemViewControllerDelegate {
+    
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+        dismiss(animated: true)
+    }
+    
+    func addItemViewController(_ controller: AddItemViewController, didFinishAddingItem item: CheckListItem) {
+        dismiss(animated: true)
+    }
+    
+}
