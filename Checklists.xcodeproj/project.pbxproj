@@ -16,6 +16,7 @@
 		083FA57422155FA100761656 /* ChecklistsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083FA57322155FA100761656 /* ChecklistsUITests.swift */; };
 		083FA585221574C700761656 /* CheckListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083FA584221574C700761656 /* CheckListItem.swift */; };
 		083FA5892215A65E00761656 /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083FA5882215A65E00761656 /* AddItemViewController.swift */; };
+		08C49631221E9E0600241C5C /* ChecklistItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C49630221E9E0600241C5C /* ChecklistItemCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		083FA57522155FA100761656 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		083FA584221574C700761656 /* CheckListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListItem.swift; sourceTree = "<group>"; };
 		083FA5882215A65E00761656 /* AddItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddItemViewController.swift; path = ../AddItemViewController.swift; sourceTree = "<group>"; };
+		08C49630221E9E0600241C5C /* ChecklistItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistItemCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +134,7 @@
 		083FA581221573B500761656 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				08C49630221E9E0600241C5C /* ChecklistItemCell.swift */,
 				083FA584221574C700761656 /* CheckListItem.swift */,
 			);
 			path = Models;
@@ -286,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08C49631221E9E0600241C5C /* ChecklistItemCell.swift in Sources */,
 				083FA585221574C700761656 /* CheckListItem.swift in Sources */,
 				083FA5892215A65E00761656 /* AddItemViewController.swift in Sources */,
 				083FA55622155F9F00761656 /* ChecklistViewController.swift in Sources */,

@@ -22,12 +22,19 @@ class ChecklistViewController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "pickColor" {
-                
-            }
+        if segue.identifier == "AddItem" {
+            let navVC = segue.destination as! UINavigationController
+            let destVC = navVC.topViewController as! AddItemViewController
+            destVC.delegate = self
         }
-        
+        else if segue.identifier == "editItem"{
+            let navVC = segue.destination as! UINavigationController
+            let destVC = navVC.topViewController as! AddItemViewController
+            let indexPath = tableView.indexPath(for: sender as! ChecklistItemCell)!
+            destVC.itemToEdit = checkList[indexPath.row]
+            destVC.delegate = self
+        }
+
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,7 +42,7 @@ class ChecklistViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath) as! ChecklistItemCell
         configureText(for: cell, withItem: self.checkList[indexPath.row])
         configureCheckmark(for: cell, withItem: self.checkList[indexPath.row])
         return cell
@@ -52,20 +59,20 @@ class ChecklistViewController: UITableViewController {
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
     
-    func configureCheckmark(for cell: UITableViewCell, withItem item: CheckListItem){
+    func configureCheckmark(for cell: ChecklistItemCell, withItem item: CheckListItem){
         if(item.checked){
-            cell.accessoryType = UITableViewCell.AccessoryType.checkmark
+            cell.CheckMark.isHidden = false
         } else {
-            cell.accessoryType = UITableViewCell.AccessoryType.none
+            cell.CheckMark.isHidden = true
         }
     }
     
-    func configureText(for cell: UITableViewCell, withItem item: CheckListItem){
-        cell.textLabel?.text = item.text
+    func configureText(for cell: ChecklistItemCell, withItem item: CheckListItem){
+        cell.LabelItem.text = item.text
     }
     
-    func addDummyTodo(){
-        checkList.append(CheckListItem(text: "Add element"))
+    func addDummyTodo(item: CheckListItem){
+        checkList.append(item)
         self.tableView.insertRows(at: [IndexPath(row: checkList.count - 1, section: 0)], with: .automatic)
     }
 }
@@ -77,6 +84,14 @@ extension ChecklistViewController: AddItemViewControllerDelegate {
     }
     
     func addItemViewController(_ controller: AddItemViewController, didFinishAddingItem item: CheckListItem) {
+        addDummyTodo(item: item)
+        dismiss(animated: true)
+    }
+    
+    func addItemViewController(_ controller: AddItemViewController, didFinishEditingItem item: CheckListItem) {
+        let indexPath = checkList.index(where: { $0 === item})
+        checkList[indexPath!].text = item.text
+        tableView.reloadRows(at: [IndexPath(item: indexPath!, section: 0)], with: UITableView.RowAnimation.automatic)
         dismiss(animated: true)
     }
     

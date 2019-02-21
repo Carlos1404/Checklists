@@ -10,17 +10,33 @@ import UIKit
 
 class AddItemViewController: UITableViewController {
     
+    var delegate: AddItemViewControllerDelegate?
+    
+    var itemToEdit: CheckListItem?
+    
     @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBAction func CancelAction() {
-        
+        delegate?.addItemViewControllerDidCancel(self)
     }
     
     @IBAction func doneAction() {
-        print(AddTextItem.text ?? "null")
-        dismiss(animated: true)
+        if let itemToEdit = itemToEdit {
+            itemToEdit.text = AddTextItem.text!
+            delegate?.addItemViewController(self, didFinishEditingItem: itemToEdit)
+        } else {
+            delegate?.addItemViewController(self, didFinishAddingItem: CheckListItem(text: AddTextItem.text!))
+        }
     }
     
     @IBOutlet weak var AddTextItem: UITextField!
+    
+    override func viewDidLoad() {
+        if(itemToEdit == nil){
+            self.title = "Add Item"
+        } else {
+            self.title = "Edit Item"
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         AddTextItem.becomeFirstResponder()
@@ -32,6 +48,7 @@ class AddItemViewController: UITableViewController {
 protocol AddItemViewControllerDelegate : class {
     func addItemViewControllerDidCancel(_ controller: AddItemViewController)
     func addItemViewController(_ controller: AddItemViewController, didFinishAddingItem item: CheckListItem)
+    func addItemViewController(_ controller:AddItemViewController,didFinishEditingItem item: CheckListItem)
 }
 
 //MARK: - UITextFieldDelegate
