@@ -8,23 +8,23 @@
 
 import UIKit
 
-class AddItemViewController: UITableViewController {
+class ItemDetailViewController: UITableViewController {
     
-    var delegate: AddItemViewControllerDelegate?
+    var delegate: ItemDetailViewControllerDelegate?
     
     var itemToEdit: CheckListItem?
     
     @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBAction func CancelAction() {
-        delegate?.addItemViewControllerDidCancel(self)
+        delegate?.itemDetailViewControllerDidCancel(self)
     }
     
     @IBAction func doneAction() {
         if let itemToEdit = itemToEdit {
             itemToEdit.text = AddTextItem.text!
-            delegate?.addItemViewController(self, didFinishEditingItem: itemToEdit)
+            delegate?.itemDetailViewController(self, didFinishEditingItem: itemToEdit)
         } else {
-            delegate?.addItemViewController(self, didFinishAddingItem: CheckListItem(text: AddTextItem.text!))
+            delegate?.itemDetailViewController(self, didFinishAddingItem: CheckListItem(text: AddTextItem.text!))
         }
     }
     
@@ -45,15 +45,15 @@ class AddItemViewController: UITableViewController {
     
 }
 
-protocol AddItemViewControllerDelegate : class {
-    func addItemViewControllerDidCancel(_ controller: AddItemViewController)
-    func addItemViewController(_ controller: AddItemViewController, didFinishAddingItem item: CheckListItem)
-    func addItemViewController(_ controller:AddItemViewController,didFinishEditingItem item: CheckListItem)
+protocol ItemDetailViewControllerDelegate : class {
+    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAddingItem item: CheckListItem)
+    func itemDetailViewController(_ controller:ItemDetailViewController,didFinishEditingItem item: CheckListItem)
 }
 
 //MARK: - UITextFieldDelegate
 
-extension AddItemViewController: UITextFieldDelegate {
+extension ItemDetailViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldString = AddTextItem.text!
