@@ -32,12 +32,12 @@ class ChecklistViewController: UITableViewController {
         
         if segue.identifier == "AddItem" {
             let navVC = segue.destination as! UINavigationController
-            let destVC = navVC.topViewController as! ListDetailViewController
+            let destVC = navVC.topViewController as! ChecklistDetailViewController
             destVC.delegate = self
         }
         else if segue.identifier == "editItem"{
             let navVC = segue.destination as! UINavigationController
-            let destVC = navVC.topViewController as! ListDetailViewController
+            let destVC = navVC.topViewController as! ChecklistDetailViewController
             let indexPath = tableView.indexPath(for: sender as! ChecklistItemCell)!
             destVC.itemToEdit = self.list.items[indexPath.row]
             destVC.delegate = self
@@ -89,18 +89,18 @@ protocol ChecklistViewControllerDelegate : class {
     func checklistViewController(_ controller: ChecklistViewController, didFinishAddingItem item: Checklist)
 }
 
-extension ChecklistViewController: ListDetailViewControllerDelegate {
+extension ChecklistViewController: ChecklistDetailViewControllerDelegate {
     
-    func itemDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
+    func itemDetailViewControllerDidCancel(_ controller: ChecklistDetailViewController) {
         dismiss(animated: true)
     }
     
-    func itemDetailViewController(_ controller: ListDetailViewController, didFinishAddingItem item: CheckListItem) {
+    func itemDetailViewController(_ controller: ChecklistDetailViewController, didFinishAddingItem item: CheckListItem) {
         addDummyTodo(item: item)
         dismiss(animated: true)
     }
     
-    func itemDetailViewController(_ controller: ListDetailViewController, didFinishEditingItem item: CheckListItem) {
+    func itemDetailViewController(_ controller: ChecklistDetailViewController, didFinishEditingItem item: CheckListItem) {
         let indexPath = self.list.items.index(where: { $0 === item})
         self.list.items[indexPath!].text = item.text
         tableView.reloadRows(at: [IndexPath(item: indexPath!, section: 0)], with: UITableView.RowAnimation.automatic)

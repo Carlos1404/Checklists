@@ -12,9 +12,11 @@ class Checklist: Codable {
     
     var name: String
     var items: [CheckListItem]
+    var icon: IconAsset
     
-    init(name: String, items: [CheckListItem] = []) {
+    init(name: String, items: [CheckListItem] = [], icon: IconAsset = IconAsset.NoIcon) {
         self.name = name
         self.items = items
+        self.icon = icon
     }
 }

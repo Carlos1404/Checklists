@@ -9,14 +9,16 @@
 import Foundation
 import UIKit
 
-class AddItemListViewController: UITableViewController {
+class ListDetailViewController: UITableViewController {
     
-    var delegate: AddItemListViewControllerDelegate?
+    var delegate: ListDetailViewControllerDelegate?
     
     var itemToEdit: Checklist?
     
     @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBOutlet weak var editText: UITextField!
+    @IBOutlet weak var icon: UIImageView!
+    @IBOutlet weak var labelIcon: UILabel!
     
     
     
@@ -39,6 +41,17 @@ class AddItemListViewController: UITableViewController {
         } else {
             self.title = "Edit Item"
             editText.text = itemToEdit?.name
+            icon.image = itemToEdit?.icon.image
+            labelIcon.text = itemToEdit?.icon.rawValue
+            
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "SelectIcon" {
+            let destVC = segue.destination as! IconPickerViewController
+            destVC.delegate = self
         }
     }
     
@@ -46,18 +59,22 @@ class AddItemListViewController: UITableViewController {
         editText.becomeFirstResponder()
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     
 }
 
-protocol AddItemListViewControllerDelegate : class {
-    func itemDetailViewControllerDidCancel(_ controller: AddItemListViewController)
-    func itemDetailViewController(_ controller: AddItemListViewController, didFinishAddingItem item: Checklist)
-    func itemDetailViewController(_ controller:AddItemListViewController,didFinishEditingItem item: Checklist)
+protocol ListDetailViewControllerDelegate : class {
+    func itemDetailViewControllerDidCancel(_ controller: ListDetailViewController)
+    func itemDetailViewController(_ controller: ListDetailViewController, didFinishAddingItem item: Checklist)
+    func itemDetailViewController(_ controller:ListDetailViewController,didFinishEditingItem item: Checklist)
 }
 
 //MARK: - UITextFieldDelegate
 
-extension AddItemListViewController: UITextFieldDelegate {
+extension ListDetailViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldString = editText.text!
@@ -66,4 +83,13 @@ extension AddItemListViewController: UITextFieldDelegate {
         return true
     }
     
+}
+
+extension ListDetailViewController: IconPickerViewControllerDelegate {
+    func iconPickerViewController(_ controller: IconPickerViewController, didFinishSelectIcon icon: IconAsset) {
+        self.icon.image = icon.image
+        itemToEdit?.icon = icon
+        labelIcon.text = icon.rawValue
+        navigationController?.popViewController(animated: true)
+    }
 }

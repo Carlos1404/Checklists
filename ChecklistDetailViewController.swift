@@ -8,9 +8,9 @@
 
 import UIKit
 
-class ListDetailViewController: UITableViewController {
+class ChecklistDetailViewController: UITableViewController {
     
-    var delegate: ListDetailViewControllerDelegate?
+    var delegate: ChecklistDetailViewControllerDelegate?
     
     var itemToEdit: CheckListItem?
     
@@ -47,15 +47,15 @@ class ListDetailViewController: UITableViewController {
     
 }
 
-protocol ListDetailViewControllerDelegate : class {
-    func itemDetailViewControllerDidCancel(_ controller: ListDetailViewController)
-    func itemDetailViewController(_ controller: ListDetailViewController, didFinishAddingItem item: CheckListItem)
-    func itemDetailViewController(_ controller:ListDetailViewController,didFinishEditingItem item: CheckListItem)
+protocol ChecklistDetailViewControllerDelegate : class {
+    func itemDetailViewControllerDidCancel(_ controller: ChecklistDetailViewController)
+    func itemDetailViewController(_ controller: ChecklistDetailViewController, didFinishAddingItem item: CheckListItem)
+    func itemDetailViewController(_ controller:ChecklistDetailViewController,didFinishEditingItem item: CheckListItem)
 }
 
 //MARK: - UITextFieldDelegate
 
-extension ListDetailViewController: UITextFieldDelegate {
+extension ChecklistDetailViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldString = AddTextItem.text!

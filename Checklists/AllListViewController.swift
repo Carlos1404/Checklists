@@ -27,12 +27,12 @@ class AllListViewController: UITableViewController {
         }
         else if segue.identifier == "addItemList" {
             let navVC = segue.destination as! UINavigationController
-            let destVC = navVC.topViewController as! AddItemListViewController
+            let destVC = navVC.topViewController as! ListDetailViewController
             destVC.delegate = self
         }
         else if segue.identifier == "editItemList"{
             let navVC = segue.destination as! UINavigationController
-            let destVC = navVC.topViewController as! AddItemListViewController
+            let destVC = navVC.topViewController as! ListDetailViewController
             let indexPath = tableView.indexPath(for: sender as! UITableViewCell)!
             destVC.itemToEdit = DataModel.shared.checkLists[indexPath.row]
             destVC.delegate = self
@@ -46,6 +46,7 @@ class AllListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "Checklists", for: indexPath)
         configureText(for: cell, withItem: DataModel.shared.checkLists[indexPath.row])
+        cell.imageView?.image = DataModel.shared.checkLists[indexPath.row].icon.image
         return cell
     }
     
@@ -93,19 +94,20 @@ extension AllListViewController: ChecklistViewControllerDelegate {
     
 }
 
-extension AllListViewController: AddItemListViewControllerDelegate {
-    func itemDetailViewControllerDidCancel(_ controller: AddItemListViewController) {
+extension AllListViewController: ListDetailViewControllerDelegate {
+    func itemDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
         dismiss(animated: true)
     }
     
-    func itemDetailViewController(_ controller: AddItemListViewController, didFinishAddingItem item: Checklist) {
+    func itemDetailViewController(_ controller: ListDetailViewController, didFinishAddingItem item: Checklist) {
         addDummyTodo(item: item)
         dismiss(animated: true)
     }
     
-    func itemDetailViewController(_ controller: AddItemListViewController, didFinishEditingItem item: Checklist) {
+    func itemDetailViewController(_ controller: ListDetailViewController, didFinishEditingItem item: Checklist) {
         let indexPath = DataModel.shared.checkLists.index(where: { $0 === item})
         DataModel.shared.checkLists[indexPath!].name = item.name
+        DataModel.shared.checkLists[indexPath!].icon = item.icon
         tableView.reloadRows(at: [IndexPath(item: indexPath!, section: 0)], with: UITableView.RowAnimation.automatic)
         dismiss(animated: true)
     }
