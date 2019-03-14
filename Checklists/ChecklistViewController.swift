@@ -32,21 +32,17 @@ class ChecklistViewController: UITableViewController {
         
         if segue.identifier == "AddItem" {
             let navVC = segue.destination as! UINavigationController
-            let destVC = navVC.topViewController as! ItemDetailViewController
+            let destVC = navVC.topViewController as! ListDetailViewController
             destVC.delegate = self
         }
         else if segue.identifier == "editItem"{
             let navVC = segue.destination as! UINavigationController
-            let destVC = navVC.topViewController as! ItemDetailViewController
+            let destVC = navVC.topViewController as! ListDetailViewController
             let indexPath = tableView.indexPath(for: sender as! ChecklistItemCell)!
             destVC.itemToEdit = self.list.items[indexPath.row]
             destVC.delegate = self
         }
 
-    }
-    
-    override func awakeFromNib() {
-        //loadChecklistItems()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -87,44 +83,24 @@ class ChecklistViewController: UITableViewController {
         self.list.items.append(item)
         self.tableView.insertRows(at: [IndexPath(row: self.list.items.count - 1, section: 0)], with: .automatic)
     }
-    
-    func saveChecklistItems(){
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        do {
-            let data = try encoder.encode(list.items)
-            try data.write(to: ChecklistViewController.dataFileUrl, options: [])
-        }
-        catch {print(error)}
-    }
-    
-    func loadChecklistItems() {
-        do {
-            let data = try Data(contentsOf: ChecklistViewController.dataFileUrl)
-            let decoder = JSONDecoder()
-            let list = try decoder.decode([CheckListItem].self, from: data)
-            self.list.items = list
-        }
-        catch {print(error)}
-    }
 }
 
 protocol ChecklistViewControllerDelegate : class {
     func checklistViewController(_ controller: ChecklistViewController, didFinishAddingItem item: Checklist)
 }
 
-extension ChecklistViewController: ItemDetailViewControllerDelegate {
+extension ChecklistViewController: ListDetailViewControllerDelegate {
     
-    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
+    func itemDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
         dismiss(animated: true)
     }
     
-    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAddingItem item: CheckListItem) {
+    func itemDetailViewController(_ controller: ListDetailViewController, didFinishAddingItem item: CheckListItem) {
         addDummyTodo(item: item)
         dismiss(animated: true)
     }
     
-    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditingItem item: CheckListItem) {
+    func itemDetailViewController(_ controller: ListDetailViewController, didFinishEditingItem item: CheckListItem) {
         let indexPath = self.list.items.index(where: { $0 === item})
         self.list.items[indexPath!].text = item.text
         tableView.reloadRows(at: [IndexPath(item: indexPath!, section: 0)], with: UITableView.RowAnimation.automatic)

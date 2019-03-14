@@ -10,35 +10,42 @@ import UIKit
 
 class AllListViewController: UITableViewController {
     
-    var checkLists: [Checklist] = []
-    
     static var documentDirectory: URL { return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! }
     
-    static var dataFileUrl: URL { return ChecklistViewController.documentDirectory.appendingPathComponent("Checklist").appendingPathExtension("json") }
+    static var dataFileUrl: URL { return AllListViewController.documentDirectory.appendingPathComponent("Checklists").appendingPathExtension("json") }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let list1: Checklist = Checklist(name: "Fruits", items: [CheckListItem(text: "Poire"), CheckListItem(text: "Pomme")])
-        let list2: Checklist = Checklist(name: "Légumes", items: [CheckListItem(text: "Carotte"), CheckListItem(text: "Haricots")])
-        checkLists.append(list1)
-        checkLists.append(list2)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "checklistsDetails" {
             let destVC = segue.destination as! ChecklistViewController
             let indexPath = tableView.indexPath(for: sender as! UITableViewCell)!
-            destVC.list = checkLists[indexPath.row]
+            destVC.list = DataModel.shared.checkLists[indexPath.row]
+            destVC.delegate = self
+        }
+        else if segue.identifier == "addItemList" {
+            let navVC = segue.destination as! UINavigationController
+            let destVC = navVC.topViewController as! AddItemListViewController
+            destVC.delegate = self
+        }
+        else if segue.identifier == "editItemList"{
+            let navVC = segue.destination as! UINavigationController
+            let destVC = navVC.topViewController as! AddItemListViewController
+            let indexPath = tableView.indexPath(for: sender as! UITableViewCell)!
+            destVC.itemToEdit = DataModel.shared.checkLists[indexPath.row]
+            destVC.delegate = self
         }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return checkLists.count
+        return DataModel.shared.checkLists.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "Checklists", for: indexPath)
-        configureText(for: cell, withItem: self.checkLists[indexPath.row])
+        configureText(for: cell, withItem: DataModel.shared.checkLists[indexPath.row])
         return cell
     }
     
@@ -47,38 +54,60 @@ class AllListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        checkLists.remove(at: indexPath.row)
+        DataModel.shared.checkLists.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
-    }
-    
-    func addList(item: Checklist){
-        checkLists.append(item)
-        self.tableView.insertRows(at: [IndexPath(row: checkLists.count - 1, section: 0)], with: .automatic)
     }
     
     func configureText(for cell: UITableViewCell, withItem item: Checklist){
         cell.textLabel?.text = item.name
+        cell.detailTextLabel?.text = uncheckedItemsCount(items: item.items)
     }
     
-    func saveChecklistItems(){
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        do {
-            let data = try encoder.encode(checkLists)
-            try data.write(to: AllListViewController.dataFileUrl, options: [])
+    func addDummyTodo(item: Checklist){
+        DataModel.shared.checkLists.append(item)
+        DataModel.shared.sortChecklists()
+        self.tableView.reloadData()
+    }
+    
+    func uncheckedItemsCount(items: [CheckListItem]) -> String{
+        let value = items.filter({ item -> Bool in
+            item.checked == false
+        }).count
+        
+        switch value {
+        case 0:
+            return "No Item"
+        default:
+            return String(value)
         }
-        catch {print(error)}
     }
-    
-    
 }
 
 extension AllListViewController: ChecklistViewControllerDelegate {
     
     func checklistViewController(_ controller: ChecklistViewController, didFinishAddingItem item: Checklist){
-        let indexPath = checkLists.index(where: { $0 === item})
-        checkLists[indexPath!].items = item.items
-        saveChecklistItems()
+        let indexPath = DataModel.shared.checkLists.index(where: { $0 === item})
+        DataModel.shared.checkLists[indexPath!].items = item.items
+        tableView.reloadRows(at: [IndexPath(item: indexPath!, section: 0)], with: UITableView.RowAnimation.automatic)
+    }
+    
+}
+
+extension AllListViewController: AddItemListViewControllerDelegate {
+    func itemDetailViewControllerDidCancel(_ controller: AddItemListViewController) {
+        dismiss(animated: true)
+    }
+    
+    func itemDetailViewController(_ controller: AddItemListViewController, didFinishAddingItem item: Checklist) {
+        addDummyTodo(item: item)
+        dismiss(animated: true)
+    }
+    
+    func itemDetailViewController(_ controller: AddItemListViewController, didFinishEditingItem item: Checklist) {
+        let indexPath = DataModel.shared.checkLists.index(where: { $0 === item})
+        DataModel.shared.checkLists[indexPath!].name = item.name
+        tableView.reloadRows(at: [IndexPath(item: indexPath!, section: 0)], with: UITableView.RowAnimation.automatic)
+        dismiss(animated: true)
     }
     
 }

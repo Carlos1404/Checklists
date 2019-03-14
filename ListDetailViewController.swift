@@ -8,14 +8,15 @@
 
 import UIKit
 
-class ItemDetailViewController: UITableViewController {
+class ListDetailViewController: UITableViewController {
     
-    var delegate: ItemDetailViewControllerDelegate?
+    var delegate: ListDetailViewControllerDelegate?
     
     var itemToEdit: CheckListItem?
     
     @IBOutlet weak var doneButton: UIBarButtonItem!
-    @IBAction func CancelAction() {
+
+    @IBAction func Cancel(_ sender: Any) {
         delegate?.itemDetailViewControllerDidCancel(self)
     }
     
@@ -35,6 +36,7 @@ class ItemDetailViewController: UITableViewController {
             self.title = "Add Item"
         } else {
             self.title = "Edit Item"
+            AddTextItem.text = itemToEdit?.text
         }
     }
     
@@ -45,15 +47,15 @@ class ItemDetailViewController: UITableViewController {
     
 }
 
-protocol ItemDetailViewControllerDelegate : class {
-    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
-    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAddingItem item: CheckListItem)
-    func itemDetailViewController(_ controller:ItemDetailViewController,didFinishEditingItem item: CheckListItem)
+protocol ListDetailViewControllerDelegate : class {
+    func itemDetailViewControllerDidCancel(_ controller: ListDetailViewController)
+    func itemDetailViewController(_ controller: ListDetailViewController, didFinishAddingItem item: CheckListItem)
+    func itemDetailViewController(_ controller:ListDetailViewController,didFinishEditingItem item: CheckListItem)
 }
 
 //MARK: - UITextFieldDelegate
 
-extension ItemDetailViewController: UITextFieldDelegate {
+extension ListDetailViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldString = AddTextItem.text!
