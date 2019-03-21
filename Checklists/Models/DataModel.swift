@@ -15,7 +15,11 @@ class DataModel: Codable {
     var checkLists: [Checklist] = []
     
     init() {
-        loadChecklistItems()
+        if (Preferences.shared.firstLaunch()) {
+            checkLists.append(Checklist(name: "Swipe me to delete"))
+        } else {
+            loadChecklistItems()
+        }
         
         NotificationCenter.default.addObserver(
             self,

@@ -12,10 +12,24 @@ class CheckListItem: Codable {
     
     var text: String
     var checked: Bool
+    var dueDate: Date
+    var shouldRemind: Bool
+    var itemID: Int
     
-    init(text: String, checked: Bool = false) {
+    init(text: String, checked: Bool = false, shouldRemind: Bool = false, dueDate: Date = Date.init(), itemID: Int) {
         self.text = text
         self.checked = checked
+        self.dueDate = dueDate
+        self.shouldRemind = shouldRemind
+        self.itemID = itemID
+    }
+    
+    init(text: String, checked: Bool = false, shouldRemind: Bool = false, dueDate: Date = Date.init()) {
+        self.text = text
+        self.checked = checked
+        self.dueDate = dueDate
+        self.shouldRemind = shouldRemind
+        self.itemID = UserDefaults.standard.integer(forKey: UserDefaultsKeys.checklistItemID)
     }
     
     func toggleChecked(){

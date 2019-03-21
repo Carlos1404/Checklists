@@ -14,6 +14,7 @@ class ListDetailViewController: UITableViewController {
     var delegate: ListDetailViewControllerDelegate?
     
     var itemToEdit: Checklist?
+    var iconAssetChoosed: IconAsset?
     
     @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBOutlet weak var editText: UITextField!
@@ -29,20 +30,29 @@ class ListDetailViewController: UITableViewController {
     @IBAction func doneAction(_ sender: Any) {
         if let itemToEdit = itemToEdit {
             itemToEdit.name = editText.text!
+            if let icon = self.iconAssetChoosed {
+                itemToEdit.icon = icon
+            }
             delegate?.itemDetailViewController(self, didFinishEditingItem: itemToEdit)
         } else {
-            delegate?.itemDetailViewController(self, didFinishAddingItem: Checklist(name: editText.text!))
+            delegate?.itemDetailViewController(self, didFinishAddingItem: Checklist(name: editText.text!, icon: self.iconAssetChoosed ?? IconAsset.NoIcon))
         }
     }
     
     override func viewDidLoad() {
         if(itemToEdit == nil){
             self.title = "Add Item"
+            self.iconAssetChoosed = IconAsset.Folder
+            if let icon = self.iconAssetChoosed {
+                self.icon.image = icon.image
+                labelIcon.text = icon.rawValue
+            }
         } else {
             self.title = "Edit Item"
             editText.text = itemToEdit?.name
             icon.image = itemToEdit?.icon.image
             labelIcon.text = itemToEdit?.icon.rawValue
+            doneButton.isEnabled = !editText.text!.isEmpty
             
         }
     }
@@ -88,8 +98,8 @@ extension ListDetailViewController: UITextFieldDelegate {
 extension ListDetailViewController: IconPickerViewControllerDelegate {
     func iconPickerViewController(_ controller: IconPickerViewController, didFinishSelectIcon icon: IconAsset) {
         self.icon.image = icon.image
-        itemToEdit?.icon = icon
         labelIcon.text = icon.rawValue
+        self.iconAssetChoosed = icon
         navigationController?.popViewController(animated: true)
     }
 }

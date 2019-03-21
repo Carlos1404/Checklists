@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 class AllListViewController: UITableViewController {
     
@@ -89,6 +90,7 @@ extension AllListViewController: ChecklistViewControllerDelegate {
     func checklistViewController(_ controller: ChecklistViewController, didFinishAddingItem item: Checklist){
         let indexPath = DataModel.shared.checkLists.index(where: { $0 === item})
         DataModel.shared.checkLists[indexPath!].items = item.items
+        DataModel.shared.saveChecklistItems()
         tableView.reloadRows(at: [IndexPath(item: indexPath!, section: 0)], with: UITableView.RowAnimation.automatic)
     }
     
@@ -108,8 +110,8 @@ extension AllListViewController: ListDetailViewControllerDelegate {
         let indexPath = DataModel.shared.checkLists.index(where: { $0 === item})
         DataModel.shared.checkLists[indexPath!].name = item.name
         DataModel.shared.checkLists[indexPath!].icon = item.icon
+        DataModel.shared.saveChecklistItems()
         tableView.reloadRows(at: [IndexPath(item: indexPath!, section: 0)], with: UITableView.RowAnimation.automatic)
         dismiss(animated: true)
     }
-    
 }

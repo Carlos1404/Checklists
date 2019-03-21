@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        let center = UNUserNotificationCenter.current()
+        
+        center.delegate = self
+        // Request permission to display alerts and play sounds.
+        center.requestAuthorization(options: [.alert, .sound])
+        { (granted, error) in
+            // Enable or disable features based on authorization.
+        }
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Weekly Staff Meeting"
+        content.body = "Every Tuesday at 2pm"
+        
+        let inTenSeconds = Date.init(timeIntervalSinceNow: 10)
+        let dateComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: inTenSeconds)
+        
+        // Create the trigger as a repeating event.
+        let trigger = UNCalendarNotificationTrigger(
+            dateMatching: dateComponents, repeats: false)
+        
+        let uuidString = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuidString,
+                                            content: content, trigger: trigger)
+        
+        // Schedule the request with the system.
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.add(request) { (error) in
+            if error != nil {
+                print("bug")
+            }
+        }
         return true
     }
 
@@ -42,5 +73,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .badge, .sound])
+    }
+    
 }
 
